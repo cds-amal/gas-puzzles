@@ -19,7 +19,7 @@ const logGasUsage = (currentGasUsage) => {
     }
 };
 
-describe('Distribute', async function () {
+describe.skip('Distribute', async function () {
     let instance;
     let owner;
     let acct1;

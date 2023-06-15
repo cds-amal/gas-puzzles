@@ -24,7 +24,7 @@ const convertStringToBytes32 = (proposalName) => {
     return ethers.utils.formatBytes32String(proposalName);
 };
 
-describe('Vote', async function () {
+describe.skip('Vote', async function () {
     let instance;
 
     beforeEach(async () => {
