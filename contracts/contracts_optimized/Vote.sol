@@ -8,26 +8,31 @@ contract OptimizedVote {
         bool voted;
     }
 
+    // 1) reorder the struct
     struct Proposal {
-        uint8 voteCount;
         bytes32 name;
+        uint8 voteCount;
         bool ended;
     }
 
     mapping(address => Voter) public voters;
 
-    Proposal[] proposals;
+    // 2) use a counter and mapping instead of array
+    mapping(uint256 => Proposal) public proposals;
+    uint256 proposalCount;
 
     function createProposal(bytes32 _name) external {
-        proposals.push(Proposal({voteCount: 0, name: _name, ended: false}));
+        proposals[++proposalCount] = Proposal({voteCount: 0, name: _name, ended: false});
     }
 
     function vote(uint8 _proposal) external {
-        require(!voters[msg.sender].voted, 'already voted');
-        voters[msg.sender].vote = _proposal;
-        voters[msg.sender].voted = true;
+        Voter storage voter = voters[msg.sender];
+        require(!voter.voted, 'already voted');
+        voter.vote = _proposal;
+        voter.voted = true;
 
-        proposals[_proposal].voteCount += 1;
+        Proposal storage proposal = proposals[_proposal];
+        ++proposal.voteCount;
     }
 
     function getVoteCount(uint8 _proposal) external view returns (uint8) {
